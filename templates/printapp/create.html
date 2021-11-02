@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<a href="{% url 'printapp:list' %}" class="btn btn-primary">戻る</a>
+
+{% if user.is_authenticated %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>タイトル:<input type="text" name="title"></p>
+    <p>概要:<input type="text" name="content"></p>
+    <p>ファイル(PDF):<input type="file" name="images"></p>
+    <p>教科:<select name="category" size="1">
+        <option value="japanese">国語</option>
+        <option value="math">数学</option>
+        <option value="english">英語</option>
+        <option value="chemistry">化学</option>
+        <option value="biology">生物</option>
+        <option value="physics">物理</option>
+        <option value="social_study">現代社会</option>
+        <option value="other">その他</option>
+    </select></p>
+    <input type="hidden" name="author" value="{{ user.id }}">
+    <input type="submit" value="作成する">
+</form>
+
+{% else %}
+ログインしてください
+<a href="{% url 'printapp:secret' %}" class="btn btn-primary" role="button" aria-pressed="true">ログイン</a>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+<form class="form-signin" method="POST">{% csrf_token %}
+    <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+    <h1 class="h3 mb-3 fw-normal">{{message}}</h1>
+    <label for="inputEmail" class="visually-hidden">名前</label>
+    <input type="text" id="inputEmail" class="form-control" placeholder="名前" name="name" required autofocus>
+    <label for="inputPassword" class="visually-hidden">自分のパスワード</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="自分のパスワード" name="password" required>
+    <div class="checkbox mb-3">
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">サインイン</button>
+    <a href="{% url 'printapp:signup' %}">アカウントをお持ちで無い方は作成ページへ。</a>
+</form>
+</div>
+{% endblock content %}

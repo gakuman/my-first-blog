@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+{% if user.is_authenticated %}
+<p><a href="{% url 'accounts:profile' user.get_username %}">{{ user.get_username }}</a>でログイン中</p>
+{% else %}
+<p>ログインしていません</p>
+{% endif %}
+
+<a href="{% url 'printapp:logout' %}" class="btn btn-primary">ログアウト</a>
+<a href="{% url 'printapp:create' %}" class="btn btn-primary">プリントを投稿</a>
+<div class="card card-auth my-5 mx-auto">
+    <div class="card-body"></div>
+        <form action="{% url 'printapp:list' %}" method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <tr><th></th><td>
+                <input type="submit" value="検索" class="btn btn-primary">
+            </td></tr>
+        </form>
+    </div>
+</div>
+
+<div class="container">
+    {% for item in data %}
+    <div class="card">
+        <h5 class="card-header">{{item.title}}</h5>
+        <div class="card-body">
+            <h5 class="card-title">投稿者:<a href="{% url 'accounts:profile' item.author %}">{{item.author}}</a></h5>
+            <h5 class="card-title">{{item.content}}</h5>
+            <h5 class="card-title">教科:{{item.category}}</h5>
+            <h5 class="card-title"><a href="{{ item.images.url }}">プリントを見る</a></h5>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock content %}
