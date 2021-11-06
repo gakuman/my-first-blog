@@ -1,0 +1,1 @@
+web: gunicorn printproject.wsgi --log-file -

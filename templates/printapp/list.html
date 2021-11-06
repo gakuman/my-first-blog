@@ -26,6 +26,7 @@
     <div class="card">
         <h5 class="card-header">{{item.title}}</h5>
         <div class="card-body">
+            <h5 class="card-title">投稿ID:{{item.id}}</h5>
             <h5 class="card-title">投稿者:<a href="{% url 'accounts:profile' item.author %}">{{item.author}}</a></h5>
             <h5 class="card-title">{{item.content}}</h5>
             <h5 class="card-title">教科:{{item.category}}</h5>

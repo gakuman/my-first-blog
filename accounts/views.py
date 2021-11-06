@@ -30,7 +30,6 @@ class Profile_editview(View):
             request.POST or None,
             initial={
                 'name':user_data.username,
-                'icon':user_data.icon,
                 'introduction':user_data.introduction,
             }
         )
@@ -42,7 +41,6 @@ class Profile_editview(View):
         if form.is_valid():
             user_data = User_user.objects.get(id=request.user.id)
             user_data.username = form.cleaned_data['name']
-            user_data.icon = form.cleaned_data['icon']
             user_data.introduction = form.cleaned_data['introduction']
             user_data.save()
             return redirect('printapp:list')
