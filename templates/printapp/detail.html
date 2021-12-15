@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+<head>
+    <style>
+        p{
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+{% block content %}
+
+<div class="container">
+    <div class="card">
+        <h5 class="card-header">{{object.title}}</h5>
+        <div class="card-body">
+            <h5 class="card-title">投稿者:<a href="{% url 'accounts:profile' object.author %}">{{object.author}}</a></h5>
+            <h5 class="card-title">内容:{{object.content}}</h5>
+            <h5 class="card-title">教科:{{object.category}}</h5>
+        </div>
+    </div>
+    <a href="{% url 'printapp:comment_create' object.id %}" class="btn btn-primary">{{ user.get_username }}としてコメントする</a>
+    <a href="{% url 'printapp:list' %}" class="btn btn-primary">一覧画面へ</a>
+</div>
+<br>
+<div class="container">
+<h1>コメント一覧</h1>
+{% for comments in comment %}
+<p>
+<div class="card bg-light" style="width: 30rem;">
+<div class='border-bottom'>コメントID:{{comments.id}}　　　投稿者:<a href="{% url 'accounts:profile' comments.name %}">{{ comments.name }}</a></div>
+<div class='mt-2'>{{ comments.content }}</div>
+{% if comments.name.username == user.get_username %}
+<h6><a href="{% url 'printapp:deletecomment' comments.id %}" class="btn btn-danger btn-sm">削除</a></h6>
+{% endif %}
+</div>
+</p>
+{% endfor %}
+</div>
+
+{% endblock %}

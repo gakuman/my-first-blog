@@ -13,7 +13,8 @@ from printapp.models import PrintModel
 
 @login_required
 def user_profile(request, username):
-    object_list = PrintModel.objects.all()
+    #model = PrintModel
+    object_list = PrintModel.objects.filter(author__username=username).order_by('id').reverse()
     User = get_user_model().objects.get(username=username)
     """ context = {
         'User':get_user_model().objects.get(username=username),

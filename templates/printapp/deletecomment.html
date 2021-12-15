@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card card-auth my-5 mx-auto">
+    <h3>この投稿を削除します。<h3 class="text-danger">※一度消去すると復元できません。</h3></h3>
+    <p>
+        <div class="card">
+        <div class='border-bottom'>コメントID:{{comments.id}}　　　投稿者:<a href="{% url 'accounts:profile' comments.name %}">{{ comments.name }}</a></div>
+        <div class='mt-2'>{{ comments.content }}</div>
+        </div>
+    </p>
+</div>
+<form action="{% url 'printapp:deletecomment' id %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="削除" class="btn btn-danger">
+    <a href="{% url 'printapp:list' %}" class="btn btn-primary">キャンセル</a>
+</form>
+{% endblock %}

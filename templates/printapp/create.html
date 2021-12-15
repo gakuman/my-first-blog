@@ -7,10 +7,15 @@
 {% if user.is_authenticated %}
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <p>タイトル:<input type="text" name="title"></p>
-    <p>概要:<input type="text" name="content"></p>
-    <p>ファイル(PDF):<input type="file" name="images"></p>
-    <p>教科:<select name="category" size="1">
+    <div class="card alert-secondary" style="width: 50rem;">
+    <p class="w-50">タイトル:<input type="text" name="title" required class="form-control"></p>
+    <br>
+    <p class="w-75">内容:<input type="text" rows="3" name="content" required class="form-control"></p>
+    <br>
+    <p>ファイル(PDF):<input type="file" name="images" required class="form-control w-50"></p>
+    <br>
+    <p class="w-25">教科:<select name="category" size="1" class="form-control" required>
+        <option value="">教科を選択</option>
         <option value="japanese">国語</option>
         <option value="math">数学</option>
         <option value="english">英語</option>
@@ -21,7 +26,9 @@
         <option value="other">その他</option>
     </select></p>
     <input type="hidden" name="author" value="{{ user.id }}">
-    <input type="submit" value="作成する">
+    <br>
+    <p class="w-50"><input type="submit" value="作成する" class="form-control btn btn-primary w-25"></p>
+    </div>
 </form>
 
 {% else %}

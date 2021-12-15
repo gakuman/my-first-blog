@@ -17,3 +17,15 @@ class PrintModel(models.Model):
         choices = CATEGORY,
         default=CATEGORY[0][0]
     )
+
+    def __str__(self):
+        return self.title[:40]
+
+
+class Comment(models.Model):
+    name = models.ForeignKey(User_user, on_delete=models.CASCADE)
+    content = models.TextField('本文')
+    target = models.ForeignKey(PrintModel, on_delete=models.CASCADE, verbose_name='対象の投稿')
+
+    def __str__(self):
+        return self.content[:20]

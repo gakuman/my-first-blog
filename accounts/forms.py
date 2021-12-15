@@ -2,6 +2,7 @@ from django import forms
 from allauth.account.forms import SignupForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from printapp.models import Comment
 
 
 class ProfileForm(forms.Form):
@@ -50,3 +51,15 @@ class Findform(forms.Form):
         required=False,
         widget=forms.widgets.Select
     )
+
+
+
+class CommentCreateForm(forms.ModelForm):
+    """コメントフォーム"""
+    class Meta:
+        model = Comment
+        exclude = ('target', 'name')
+
+
+class WordForm(forms.Form):
+    find = forms.CharField(label='キーワード検索',required=False)

@@ -7,9 +7,12 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from accounts.models import User_user,UserManager
 from allauth.account import views
-from accounts.forms import SignupUserForm,secretform,Findform
+from accounts.forms import SignupUserForm,secretform,Findform,CommentCreateForm,WordForm
 from printapp.models import PrintModel
 from django.contrib.auth import get_user_model
+from printapp.models import Comment
+from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 
 """ @login_required
@@ -26,21 +29,62 @@ class CreateClass(CreateView):
 
 @login_required
 def listview(request):
+    if request.user.is_superuser:
+        admin = 'OK'
+    else:
+        admin = 'NO'
     if request.method == 'POST':
         form = Findform(request.POST)
         find = request.POST['find']
         if find == '全て':
             data = PrintModel.objects.all().order_by('id').reverse()
+            c_num = PrintModel.objects.all().count()
+
         else:
             data = PrintModel.objects.filter(category=find).order_by('id').reverse()
+            c_num = PrintModel.objects.filter(category=find).count()
     else:
         form = Findform()
         data = PrintModel.objects.all().order_by('id').reverse()
+        c_num = PrintModel.objects.all().count()
+
     context = {
         'form':form,
-        'data':data
+        'data':data,
+        'admin':admin,
+        'count':c_num
     }
     return render(request, 'printapp/list.html',context)
+
+
+
+@login_required
+def listwordview(request):
+    if request.user.is_superuser:
+        admin = 'OK'
+    else:
+        admin = 'NO'
+    if request.method == 'POST':
+        form = WordForm(request.POST)
+        find = request.POST['find']
+        data = PrintModel.objects.filter(Q(title__contains=find)|Q(content__contains=find)|Q(author__username__contains=find)).order_by('id').reverse()
+        c_num = PrintModel.objects.filter(Q(title__contains=find)|Q(content__contains=find)|Q(author__username__contains=find)).count()
+        #data = PrintModel.objects.filter(title__contains=find).order_by('id').reverse()
+    else:
+        form = WordForm()
+        data = PrintModel.objects.all().order_by('id').reverse()
+        c_num = PrintModel.objects.all().count()
+    context = {
+        'form':form,
+        'data':data,
+        'admin':admin,
+        'count':c_num
+    }
+    return render(request, 'printapp/find.html',context)
+
+
+
+
 
 
 
@@ -93,11 +137,30 @@ def listview(request):
     #template_name = 'printapp/signup2.html'
     #form_class = SignupUserForm
 
+def Delete(request,pk):
+    model = PrintModel.objects.get(id=pk)
+    if request.method == 'POST':
+        model.delete()
+        return redirect('printapp:list')
+    content = {
+        'id':pk,
+        'item':model
+    }
+    return render(request,'printapp/delete.html',content)
 
-class Delete(DeleteView):
-    template_name = 'delete.html'
-    model = PrintModel
-    success_url = reverse_lazy('printapp:list')
+
+
+
+def commentDelete(request,pk):
+    model = Comment.objects.get(id=pk)
+    if request.method == 'POST':
+        model.delete()
+        return redirect('printapp:detail',pk=model.target.id)
+    content = {
+        'id':pk,
+        'comments':model
+    }
+    return render(request,'printapp/deletecomment.html',content)
 
 
 
@@ -142,3 +205,31 @@ def signup(request):
     return render(request, 'printapp/signup2.html', {'form': form})
 
 
+class CommentCreate(CreateView):
+    """コメント投稿ページのビュー"""
+    template_name = 'printapp/comment_form.html'
+    model = Comment
+    form_class = CommentCreateForm
+ 
+    def form_valid(self, form):
+        post_pk = self.kwargs['pk']
+        post = get_object_or_404(PrintModel, pk=post_pk)
+        comment = form.save(commit=False)
+        comment.target = post
+        form.instance.name = self.request.user
+        comment.save()
+        return redirect('printapp:detail', pk=post_pk)
+ 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['post'] = get_object_or_404(PrintModel, pk=self.kwargs['pk'])
+        return context
+
+
+
+@login_required
+def detailview(request,pk):
+    object = PrintModel.objects.get(pk=pk)
+    comment = Comment.objects.filter(target=object)
+
+    return render(request, 'printapp/detail.html', {'object':object,'comment':comment})

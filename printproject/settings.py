@@ -165,5 +165,5 @@ ACCOUNT_EMAIL_VERIFICATION = 'none' # メール検証を必須とする
  
 LOGIN_URL = '/login/' # ログインURLの設定
 LOGIN_REDIRECT_URL = '/list/' # ログイン後のリダイレクト先
-LOGOUT_REDIRECT_URL = '/hwuy789ty79ysgheuy9gyo8t8gos8eg8osehew5uw4uhuwqh4/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/login/' #　ログアウト後のリダイレクト先
+LOGOUT_REDIRECT_URL = '/'
+#ACCOUNT_LOGOUT_REDIRECT_URL = '//' #　ログアウト後のリダイレクト先

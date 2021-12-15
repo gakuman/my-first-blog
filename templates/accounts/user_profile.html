@@ -1,34 +1,44 @@
 {% extends "base.html" %}
 {% load static %}
-
+<!--<link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}">-->
 {% block content %}
-<div id="profile_page">
-    <div id="user_status">
-        <h2>{{ User.username }}</h2>
-        <p class="followBtn">{{User.introduction}}</p>
-        {% if request.user.id == User.id %}
-        <a href="{% url 'accounts:edit' %}" class="btn btn-primary">編集する</a>
-        {% endif %}
-    </div>
-    <div id="user_post">
-        <!--<p class="list-t">{{ User.username }}さんの投稿一覧</p>-->
+<div class="card alert-secondary">
+    <div id="profile_page">
+        <div id="user_status">
+            <p class="h1 text-light bg-dark">{{ User.username }}さんのマイページ</p>
+            <p class="text-black-50 h4"><span class="border rounded border-3 border-primary">{{User.introduction}}</span></p>
+            {% if request.user.id == User.id %}
+            <a href="{% url 'accounts:edit' %}" class="btn btn-secondary">編集する</a>
+            {% endif %}            
+            <br>
+            <br>
+            <p><a href="{% url 'printapp:list' %}" class="btn btn-primary" style="width: 15rem;">一覧画面へ</a></p>
+        </div>
     </div>
 </div>
-
+<br>
+<br>
 <div class="container">
+<div class="card alert-secondary" style="width: 60rem;">
+<h3 class="card-header">{{ User.username }}さんの投稿一覧</h3>
     {% for item in object_list %}
-        {% if User.username == item.author %}
-        <div class="card">
+    <div class="container">
+        <div class="card" style="width: 30rem;">
             <h5 class="card-header">{{item.title}}</h5>
+            {% if item.author.username == user.get_username %}
+            <h5 class="card-header"><a href="{% url 'printapp:delete' item.id %}" class="btn btn-danger">削除</a></h5>
+            {% endif %}
             <div class="card-body">
                 <h5 class="card-title">投稿者:<a href="{% url 'accounts:profile' item.author %}">{{item.author}}</a></h5>
-                <h5 class="card-title">{{item.content}}</h5>
+                <h5 class="card-title">内容:{{item.content}}</h5>
                 <h5 class="card-title">教科:{{item.category}}</h5>
-                <h5 class="card-title"><a href="{{ item.images.url }}">プリントを見る</a></h5>
+                <h5 class="card-title"><a href="{{ item.images.url }}" class="btn btn-outline-primary">プリントを見る</a></h5>
+                <h5 class="card-title"><a href="{% url 'printapp:detail' item.pk %}" class="btn btn-outline-primary">コメントを見る</a></h5>
             </div>
         </div>
-        {% endif %}
+    </div>
     {% endfor %}
+</div>
 </div>
 
 <style type="text/css">
